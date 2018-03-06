@@ -1,0 +1,31 @@
+@import "./lib/colors.css";
+
+todo-app {
+	.todo-app {
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+	todo-header{
+		display: block;
+		flex: 1 0 100%;
+	}
+	todo-list {
+		display: block;
+		flex: 1 1 66%;
+	}
+	button {
+		background: $c-button-background;
+		color: $c-button;
+		border: 1px solid $c-button-border;
+		border-radius: 3px;
+		cursor: pointer;
+		margin: 2px;
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+
+		&:hover {
+			color: $c-button-hover;
+			background: $c-button-hover-background;
+		}
+	}
+}

@@ -1,0 +1,36 @@
+@import '../../styles/lib/colors.css';
+
+calendar {
+	display: inline-block;
+	background: white;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+	width: 13em;
+
+	.month-picker {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	table {
+		width: 100%;
+
+		td, th {
+			text-align: center;
+		}
+		th {
+			background: $c-grey-10;
+		}
+		td {
+			cursor: pointer;
+
+			&:hover {
+				color: $c-link-hover;
+				background: $c-link-hover-background;
+			}
+			&.now {
+				background: $c-secondary-1;
+			}
+		}
+	}
+}

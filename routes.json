@@ -1,0 +1,15 @@
+{
+	"/": {
+		"title": "Welcome!",
+		"component": "todo-app",
+		"name": "home"
+	},
+	"/tasks/load": {
+		"name": "tasks-load",
+		"rest": "tasks:load"
+	},
+	"/tasks/save": {
+		"name": "tasks-save",
+		"rest": "tasks:save"
+	}	
+}

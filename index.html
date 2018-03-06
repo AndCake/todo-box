@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{{title}}</title>
+		<style>
+			body { margin: 0; }
+			.-original-content { display: none; }
+			.-shadow-root { display: block; }
+			#page-content>* { opacity: 0; transition: opacity 250ms ease-out; }
+			#page-content>*[__ready] { opacity: 1; }
+		</style>
+		{{head}}
+	</head>
+	<body>
+		<div id="page-content">
+			{{component}}
+		</div>
+		<script src="/zino-light.js"></script>
+		<script>
+			window.__INITIAL_STATE__ = {{storeState}};
+			{{devTools}}
+			{{componentProps}}
+			Zino.import("{{path}}", function() {
+				document.querySelector("{{name}}").setProps('__random__', Math.random());
+			});
+		</script>
+	</body>
+</html>
