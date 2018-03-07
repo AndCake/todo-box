@@ -49,7 +49,9 @@ export default class TodoApp {
 		this.userStore = new UserStore();
 
 		this.taskStore.on('changed', this.tasksChanged = data => {
-			this.getHost().setProps(data);
+			setTimeout((() => {
+				this.getHost().setProps(data);
+			}).bind(this), 150);
 		});
 		this.userStore.on('changed', this.usersChanged = data => {
 			if (data && Object.keys(data).length > 0) {
