@@ -1,5 +1,4 @@
 import styles from './styles/todo-header.css';
-import UserStore from '../../stores/user-store';
 
 export default class TodoHeader {
 	render(data) {
@@ -71,9 +70,12 @@ export default class TodoHeader {
 					username: this.username.value,
 					password: this.password.value
 				};
-				this.getHost().setProps('credentials', credentials);
-				let userStore = new UserStore();
-				userStore.setUser(credentials);
+				let customEvent = new CustomEvent('login', {
+					bubbles: true,
+					cancelable: false,
+					detail: credentials
+				});
+				this.getHost().dispatchEvent(customEvent);
 			}}
 		};
 	}

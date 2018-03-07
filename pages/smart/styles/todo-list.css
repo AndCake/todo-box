@@ -97,7 +97,10 @@ todo-list {
 		font-size: 80%;
 
 		ul {
-			padding: 4em 0;
+			padding-bottom: 4em;
+		}
+		.todo-list__filter {
+			padding-top: 4em;
 		}
 
 		form {
