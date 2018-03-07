@@ -43,6 +43,11 @@ export default class TodoList {
 										<span class="todo_tag js-tag">{tag}</span>
 									)).bind(this)) || ''}
 								</span>
+								<span class="links">
+									{task.links && task.links.map((link => (
+										<a href={link.url} class="todo_link">{link.name}</a>
+									)).bind(this))}
+								</span>
 							</div>
 							<button class="js-delete">x</button>
 						</li>
@@ -113,6 +118,10 @@ export default class TodoList {
 					this.value = this.value.replace(/([+@]\w*)$/, this.nextElementSibling && this.nextElementSibling.value || '') + ' ';
 					this.getHost().setProps('suggestions', []);
 				}
+			}, blur() {
+				setTimeout(() => {
+					this.getHost().setProps('suggestions', []);
+				}, 500);
 			}},
 			'li .todo_text': {click() {
 				let taskId = this.parentNode.parentNode.dataset.id;
@@ -149,7 +158,7 @@ export default class TodoList {
 				let value = this.task.value;
 				if (this.getHost().props.editing) {
 					taskStore.delete(this.getHost().props.editing.id);
-					this.getHost().props.editing = null;
+					this.getHost().setProps('editing', null);
 				}
 				taskStore.add(value);
 				this.task && (this.task.value = '');

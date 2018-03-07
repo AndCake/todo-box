@@ -52,9 +52,10 @@ function calculateDataObject(tasks, filters) {
 function stringifyTask(task, doneOnly) {
 	if (!doneOnly && task.done || doneOnly && !task.done) return '';
 	return [
-		task.done ? 'x' : '',
+		task.done ? 'x ' + new Date().toISOString().split('T')[0] : '',
 		task.priority || '',
 		task.text.trim(),
+		task.links && task.links.map(link => link.url).join(' '),
 		task.projects && task.projects.join(' '),
 		task.contexts && task.contexts.join(' '),
 		task.tags && task.tags.join(' ')
@@ -66,11 +67,22 @@ function stringify(tasks, doneOnly) {
 }
 
 function parseTask(task, id) {
-	let projects = task.match(/(\+\w+)/g);
-	let priority = task.match(/\s*(\([A-Z]\))\s+/g);
-	let contexts = task.match(/(@\w+)/g);
-	let tags = task.match(/\b(\w+:[\w,:-]+)/g);
-	let text = task.replace(/(?:\s*(?:\([A-Z]\))\s+)|(?:\+\w+)|(?:@\w+)|(?:\b(?:\w+:[\w,:-]+))/g, '').replace(/\s+/g, ' ').trim();
+	let projects = task.match(/\s(\+\w+)/g);
+	let priority = task.match(/\s?(\([A-Z]\))\s+/g);
+	let contexts = task.match(/\s(@\w+)/g);
+	let tags = task.match(/\s(\w+:[\w,:-]+)/g);
+	let text = task.replace(/(?:\s*(?:\([A-Z]\))\s+)|(?:\s\+\w+)|(?:\s@\w+)|(?:\b(?:\w+:[\w,:-]+))/g, '').replace(/\s+/g, ' ').trim();
+	let links = text.match(/\bhttps?:\/\/[^ ]+/g);
+	projects = projects && projects.map(project => project.trim());
+	contexts = contexts && contexts.map(project => project.trim());
+	tags = tags && tags.map(project => project.trim());
+	links = links && links.map(link => {
+		text = text.replace(link, '').trim();
+		return {
+			url: link,
+			name: link.match(/https?:\/\/([^/]+)/)[1]
+		};
+	}) || [];
 	let taskObject = {
 		id,
 		text,
@@ -79,6 +91,7 @@ function parseTask(task, id) {
 		contexts,
 		tags,
 		tagNames: tags && tags.map(tag => tag.split(':')[0]) || [],
+		links,
 		toString: () => stringifyTask(taskObject)
 	};
 

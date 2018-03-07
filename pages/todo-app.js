@@ -22,24 +22,30 @@ export default class TodoApp {
 		return (
 			<div class="todo-app">
 				<todo-header data-credentials={data.props.credentials}/>
-				<todo-nav data-projects={data.props.projects} data-contexts={data.props.contexts} data-tags={data.props.tags}/>
+				<todo-nav data-projects={data.props.projects} data-contexts={data.props.contexts} data-tags={data.props.tags} data-filters={data.props.filters}/>
 				<todo-list data-store={this.taskStore} data-projects={data.props.projects} data-contexts={data.props.contexts} data-tasks={data.props.filteredTasks} data-filters={data.props.filters}/>
 			</div>
 		);
 	}
 
 	get styles() { return styles; }
+	get events() {
+		return {
+			'todo-nav': {filter(event) {
+				this.getHost().taskStore.filter(event.detail);
+			}}
+		};
+	}
 
 	onmount(z) {
 		z.import('./smart/todo-header.js');
-		//z.import('./dumb/todo-nav');
+		z.import('./dumb/todo-nav.js');
 		z.import('./smart/todo-list.js');
 
 		this.taskStore = new TaskStore();
 		this.userStore = new UserStore();
 
 		this.taskStore.on('changed', this.tasksChanged = data => {
-			console.log('taskStore changed', data);
 			this.getHost().setProps(data);
 		});
 		this.userStore.on('changed', this.usersChanged = data => {

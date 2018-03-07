@@ -1,6 +1,6 @@
 {
 	"/": {
-		"title": "Welcome!",
+		"title": "Todo Box",
 		"component": "todo-app",
 		"name": "home"
 	},
@@ -11,5 +11,5 @@
 	"/tasks/save": {
 		"name": "tasks-save",
 		"rest": "tasks:save"
-	}	
+	}
 }

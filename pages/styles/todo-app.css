@@ -12,7 +12,10 @@ todo-app {
 	}
 	todo-list {
 		display: block;
-		flex: 1 1 66%;
+		flex: 1 1 75%;
+	}
+	todo-nav {
+		flex: 1 1 calc(25% - 1em);
 	}
 	button {
 		background: $c-button-background;
@@ -26,6 +29,18 @@ todo-app {
 		&:hover {
 			color: $c-button-hover;
 			background: $c-button-hover-background;
+		}
+	}
+
+	@media screen and (max-width: 686px) {
+		todo-nav {
+			display: none;
+		}
+		todo-header {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
 		}
 	}
 }

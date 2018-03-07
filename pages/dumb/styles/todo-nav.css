@@ -1,0 +1,31 @@
+@import '../../styles/lib/colors.css';
+
+todo-nav {
+	display: block;
+	background: $c-default-background;
+	box-shadow: 0 0 16px rgba(0, 0, 0, 0.25);
+	margin-right: 1em;
+
+	nav {
+		padding: 0 1em;
+	}
+
+	ul {
+		list-style-type: none;
+		padding: 0;
+		margin: 0;
+	}
+	li {
+		padding: 0.25em 0.5em;
+		margin: 0.25em 0;
+		border-radius: 3px;
+		cursor: pointer;
+
+		&:hover, &.selected {
+			background: $c-secondary-4;
+			color: $c-secondary-1;
+			border: $c-secondary-3;
+			box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
+		}
+	}
+}

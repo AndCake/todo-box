@@ -23,10 +23,12 @@ todo-list {
 		margin-left: auto;
 	}
 	.todo {
-		display: inline-block;
+		display: flex;
+ 	   flex-wrap: wrap;
 	}
 	.todo_text {
 		display: block;
+		flex: 1 0 100%;
 	}
 	.todo[data-priority^="("] {
 		color: $c-secondary-0;
@@ -80,7 +82,7 @@ todo-list {
 			flex: 1 0 auto;
 		}
 
-		calendar {
+		calendar, #suggestions {
 			position: absolute;
 			left: 1em;
 			bottom: 2em;
@@ -88,6 +90,23 @@ todo-list {
 
 		input[type="text"] {
 			width: calc(100% - 10px);
+		}
+	}
+
+	@media screen and (max-width: 686px) {
+		font-size: 80%;
+
+		ul {
+			padding: 4em 0;
+		}
+
+		form {
+			background: $c-default-background;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
 		}
 	}
 }
