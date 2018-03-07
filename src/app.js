@@ -10,9 +10,6 @@ import {zino, setCollector, renderComponent, setBasePath, setStaticBasePath} fro
 let port = process.argv[2] || 8888;
 let basePath = process.cwd();
 let isProd = process.env.NODE_ENV === 'production';
-if (isProd) {
-	port = 80;
-}
 
 const scriptLoader = 'function loadScript(url, cb) {var script = document.createElement(\'script\');script.src = url;script.onload = cb;document.body.appendChild(script);}';
 const liveReload = 'setInterval(function(){fetch("/reload.js").then(function(res){return res.ok && res.text() || "";}).then(function(val){if (val) location.reload(); });}, 2500);';
