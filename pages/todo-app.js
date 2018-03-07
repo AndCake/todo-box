@@ -54,7 +54,7 @@ export default class TodoApp {
 		this.userStore.on('changed', this.usersChanged = data => {
 			if (data && Object.keys(data).length > 0) {
 				this.taskStore.setCredentials(data);
-				this.props.credentials = data;
+				this.getHost().setProps('credentials', data);
 			}
 		});
 	}
