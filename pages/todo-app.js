@@ -41,7 +41,7 @@ export default class TodoApp {
 	}
 
 	onmount(z) {
-		z.import('./smart/todo-header.js');
+		z.import('./dumb/todo-header.js');
 		z.import('./dumb/todo-nav.js');
 		z.import('./smart/todo-list.js');
 
