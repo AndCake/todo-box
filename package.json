@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "chokidar-cli": "^1.2.0",
-    "glassbil": "../glassbil",
+    "glassbil": "^0.0.6",
     "glob": "^7.1.2",
     "koa": "^2.4.1",
     "koa-body": "^2.5.0",
