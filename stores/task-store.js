@@ -100,6 +100,7 @@ function parseTask(task, id) {
 
 function parseTaskList(taskList) {
 	let tasks = [];
+	if (!taskList) return tasks;
 	taskList.split('\n').forEach((task, id) => {
 		if (task) {
 			tasks.push(parseTask(task, id.toString()));

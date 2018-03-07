@@ -9,6 +9,8 @@ todo-app {
 	todo-header{
 		display: block;
 		flex: 1 0 100%;
+		position: relative;
+		z-index: 1;
 	}
 	todo-list {
 		display: block;
