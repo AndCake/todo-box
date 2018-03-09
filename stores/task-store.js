@@ -186,6 +186,12 @@ export default class TaskStore extends Store {
 		_this = this;
 
 		this.loadTasks();
+		if (typeof window !== 'undefined') {
+			if (window.taskStoreInterval) {
+				clearInterval(window.taskStoreInterval);
+			}
+			window.taskStoreInterval = setInterval(this.loadTasks.bind(this), 300000);
+		}
 	}
 
 	setCredentials(credentials) {

@@ -1,6 +1,7 @@
 import styles from './styles/todo-app.css';
 import TaskStore from '../stores/task-store';
 import UserStore from '../stores/user-store';
+import TaskNotifier from '../lib/task-notifier';
 
 export default class TodoApp {
 	constructor() {
@@ -47,8 +48,10 @@ export default class TodoApp {
 
 		this.taskStore = new TaskStore();
 		this.userStore = new UserStore();
+		this.notifier = new TaskNotifier();
 
 		this.taskStore.on('changed', this.tasksChanged = data => {
+			this.notifier.setTasks(data.tasks.filter(task => task.tags && task.tags.find(tag => tag.split(':')[0] === 'due')));
 			setTimeout((() => {
 				this.getHost().setProps(data);
 			}).bind(this), 150);
