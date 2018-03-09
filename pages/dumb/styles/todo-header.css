@@ -15,6 +15,10 @@ todo-header {
         align-items: center;
     }
 
+    .logo {
+        text-shadow: 1px 1px 1px $c-primary-4;
+    }
+
     .login-trigger {
         border: 1px solid $c-tertiary-4;
         cursor: pointer;
