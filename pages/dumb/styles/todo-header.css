@@ -17,6 +17,7 @@ todo-header {
 
     .logo {
         text-shadow: 1px 1px 1px $c-primary-4;
+        font-family: sans-serif;
     }
 
     .login-trigger {
