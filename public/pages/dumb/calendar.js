@@ -31,7 +31,7 @@ function __$styleInject(css, ref) {
   }
 }
 
-var styles = (function (code) { return code; })("calendar{display:inline-block;background:#fff;-webkit-box-shadow:0 0 10px rgba(0,0,0,.25);box-shadow:0 0 10px rgba(0,0,0,.25);width:13em}calendar .month-picker{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between}calendar table{width:100%}calendar table td,calendar table th{text-align:center}calendar table th{background:#e5e5e5}calendar table td{cursor:pointer}calendar table td:hover{color:#e2f0a0;background:#6c7e15}calendar table td.now{background:#de94ab}", {});
+var styles = (function (code) { return code; })("calendar{display:inline-block;background:#fff;-webkit-box-shadow:0 0 10px rgba(0,0,0,.25);box-shadow:0 0 10px rgba(0,0,0,.25);width:13em}calendar .month-picker{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between}calendar table{width:100%}calendar table td,calendar table th{text-align:center}calendar table th{background:#e5e5e5}calendar table td{cursor:pointer}calendar table td:hover{color:#e2f0a0;background:#6c7e15}calendar table td.now{background:#de94ab}@media screen and (max-width:686px){calendar{font-size:130%}}", {});
 
 function getWeekDay(year, month, day) {
 	var weekDay = new Date(year + '-' + month + '-' + day).getDay() - 1;

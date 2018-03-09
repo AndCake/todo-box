@@ -22,7 +22,7 @@ todo-list {
 		padding: 10px 16px;
 		display: flex;
 		transition: opacity 0.2s linear, max-height 0.2s linear, padding-top 0.2s linear, padding-bottom 0.2s linear;
-		max-height: 7em;
+		max-height: 10em;
 
 		&.todo-editing {
 			opacity: 0.5;
@@ -101,6 +101,9 @@ todo-list {
 	.todo[data-priority^="(E)"] {
 		font-size: 80%;
 	}
+	.contexts, .projects, .tags, .links {
+		line-height: 1.56em;
+	}
 	.todo_context {
 		color: #369;
 		font-weight: bold;
@@ -137,7 +140,15 @@ todo-list {
 		calendar, #suggestions {
 			position: absolute;
 			left: 1em;
-			bottom: 2em;
+			top: 50px;
+		}
+
+		#suggestions {
+			background: $c-default-background;
+			border: 0;
+			padding: 5px 10px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+			appearance: none;
 		}
 
 		button[type="submit"] {
@@ -176,6 +187,11 @@ todo-list {
 			bottom: 0;
 			left: 0;
 			right: 0;
+
+			calendar, #suggestions {
+				bottom: 40px;
+				top: auto;
+			}
 
 			input[type="text"] {
 				width: calc(100% - 32px);

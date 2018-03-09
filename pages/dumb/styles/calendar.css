@@ -33,4 +33,8 @@ calendar {
 			}
 		}
 	}
+
+	@media screen and (max-width: 686px) {
+		font-size: 130%;
+	}
 }
