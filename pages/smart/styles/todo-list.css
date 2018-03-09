@@ -14,6 +14,9 @@ todo-list {
 	.todo-list__filter {
 		order: 2;
 	}
+	.todo-list__filter, ul, form {
+		flex: 1 0 100%;
+	}
 	li {
 		margin: 0;
 		padding: 10px 16px;
@@ -124,7 +127,6 @@ todo-list {
 		justify-content: stretch;
 		align-items: flex-start;
 		position: relative;
-		flex: 1 0 100%;
 		order: 1;
 
 		label {
