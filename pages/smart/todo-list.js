@@ -137,6 +137,7 @@ export default class TodoList {
 				animate(this, 'toggle', 'checked').then(() => {
 					return animate(this.parentNode, 'add', 'leaving');
 				}).then(() => {
+					this.parentNode.parentNode.removeChild(this.parentNode);
 					taskStore.do(taskId);
 				});
 			}},
