@@ -1,4 +1,5 @@
 import styles from './styles/todo-list.css';
+import animate from '../../lib/animate';
 
 export default class TodoList {
 	constructor() {
@@ -25,7 +26,7 @@ export default class TodoList {
 				<ul>
 					{data.props.tasks.map((task => (
 						<li data-id={task.id} class={data.props.editing && data.props.editing.id === task.id ? 'todo-editing' : ''}>
-							<input type="checkbox"/>
+							<div class="todo__checkbox"></div>
 							<div class="todo" data-priority={task.priority}>
 								<span class="todo_text">{task.text}</span>
 								<span class="contexts">
@@ -130,16 +131,21 @@ export default class TodoList {
 				this.getHost().querySelector('form input').value = task.toString();
 				this.getHost().querySelector('form input').focus();
 			}},
-			'li input': {change() {
+			'li .todo__checkbox': {click() {
 				let taskId = this.parentNode.dataset.id;
 				let taskStore = this.getHost().props.store;
-				this.checked = false;
-				taskStore.do(taskId);
+				animate(this, 'toggle', 'checked').then(() => {
+					return animate(this.parentNode, 'add', 'leaving');
+				}).then(() => {
+					taskStore.do(taskId);
+				});
 			}},
 			'.js-delete': {click() {
 				let taskId = this.parentNode.dataset.id;
 				let taskStore = this.getHost().props.store;
-				taskStore.delete(taskId);
+				animate(this.parentNode, 'add', 'leaving').then(() => {
+					taskStore.delete(taskId);
+				});
 			}},
 			'#suggestions': {click() {
 				this.previousElementSibling.value = this.previousElementSibling.value.replace(/([+@]\w*)$/, this.value) + ' ';

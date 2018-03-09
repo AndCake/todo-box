@@ -31,7 +31,7 @@ function __$styleInject(css, ref) {
   }
 }
 
-var styles = (function (code) { return code; })("todo-nav{display:block;background:#fff;-webkit-box-shadow:0 0 16px rgba(0,0,0,.25);box-shadow:0 0 16px rgba(0,0,0,.25);margin-right:1em}todo-nav nav{padding:0 1em}todo-nav ul{list-style-type:none;padding:0;margin:0}todo-nav li{padding:.25em .5em;margin:.25em 0;border-radius:3px;cursor:pointer}todo-nav li.selected,todo-nav li:hover{background:#520019;color:#de94ab;border:#751331;-webkit-box-shadow:0 0 3px rgba(0,0,0,.25);box-shadow:0 0 3px rgba(0,0,0,.25)}", {});
+var styles = (function (code) { return code; })("todo-nav{display:block;background:#fff;-webkit-box-shadow:0 0 16px rgba(0,0,0,.25);box-shadow:0 0 16px rgba(0,0,0,.25);margin-right:1em;font-family:sans-serif}todo-nav nav{padding:1em}todo-nav h3{font-size:16px;margin:0}todo-nav ul{list-style-type:none;padding:8px 0;margin:0;border-bottom:1px solid #e5e5e5;margin-bottom:1em}todo-nav li{line-height:32px;height:32px;padding:0;padding-left:24px;font-size:15px;cursor:pointer}todo-nav li.selected,todo-nav li:hover{background:#8b75a9;color:#fff;-webkit-box-shadow:0 0 3px rgba(0,0,0,.25);box-shadow:0 0 3px rgba(0,0,0,.25)}@media screen and (max-width:686px){todo-nav li{line-height:48px;height:48px;padding-left:16px;font-size:16px}}", {});
 
 var TodoNav = function TodoNav() {
 	var _this = this || {};

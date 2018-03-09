@@ -15,6 +15,7 @@ todo-app {
 	todo-list {
 		display: block;
 		flex: 1 1 75%;
+		padding-top: 1em;
 	}
 	todo-nav {
 		flex: 1 1 calc(25% - 1em);
@@ -43,6 +44,9 @@ todo-app {
 			top: 0;
 			left: 0;
 			right: 0;
+		}
+		todo-list {
+			padding-top: 5.5em;
 		}
 	}
 }

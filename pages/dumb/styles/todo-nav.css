@@ -5,27 +5,45 @@ todo-nav {
 	background: $c-default-background;
 	box-shadow: 0 0 16px rgba(0, 0, 0, 0.25);
 	margin-right: 1em;
+	font-family: sans-serif;
 
 	nav {
-		padding: 0 1em;
+		padding: 1em;
+	}
+
+	h3 {
+		font-size: 16px;
+		margin: 0;
 	}
 
 	ul {
 		list-style-type: none;
-		padding: 0;
+		padding: 8px 0;
 		margin: 0;
+		border-bottom: 1px solid $c-grey-10;
+		margin-bottom: 1em;
 	}
 	li {
-		padding: 0.25em 0.5em;
-		margin: 0.25em 0;
-		border-radius: 3px;
+		line-height: 32px;
+		height: 32px;
+		padding: 0;
+		padding-left: 24px;
+		font-size: 15px;
 		cursor: pointer;
 
 		&:hover, &.selected {
-			background: $c-secondary-4;
-			color: $c-secondary-1;
-			border: $c-secondary-3;
+			background: $c-tertiary-1;
+			color: $c-default-background;
 			box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
+		}
+	}
+
+	@media screen and (max-width: 686px) {
+		li {
+			line-height: 48px;
+			height: 48px;
+			padding-left: 16px;
+			font-size: 16px;
 		}
 	}
 }
