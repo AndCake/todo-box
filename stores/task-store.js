@@ -209,7 +209,7 @@ export default class TaskStore extends Store {
 		if (typeof localStorage !== 'undefined') {
 			taskList = localStorage.getItem('todos');
 			let tasks = parseTaskList(taskList);
-			let newState = calculateDataObject(tasks);
+			let newState = calculateDataObject(tasks, this.data.filters);
 			this.next(newState);
 		}
 		fetch(router.getUrl('tasks-load'), {
@@ -221,7 +221,7 @@ export default class TaskStore extends Store {
 		}).then(data => data.json()).then(data => {
 			taskList = data.tasks || '';
 			let tasks = parseTaskList(taskList);
-			let newState = calculateDataObject(tasks);
+			let newState = calculateDataObject(tasks, this.data.filters);
 			this.next(newState);
 		});
 	}
