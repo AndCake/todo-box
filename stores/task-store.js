@@ -21,9 +21,11 @@ function calculateDataObject(tasks, filters) {
 
 	tasks.forEach((task, id) => {
 		task.id = id.toString();
+		task.tags && task.tags.forEach(tag => tags[tag] += 1);
+	});
+	result.filteredTasks.forEach(task => {
 		task.projects && task.projects.forEach(project => projects[project] += 1);
 		task.contexts && task.contexts.forEach(context => contexts[context] += 1);
-		task.tags && task.tags.forEach(tag => tags[tag] += 1);
 	});
 	result.filteredTasks = result.filteredTasks.sort((taskA, taskB) => {
 		let dueTagA = taskA.tags && taskA.tags.find(tag => tag.split(':')[0] === 'due');
