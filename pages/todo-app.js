@@ -9,6 +9,7 @@ export default class TodoApp {
 		// define initial props
 		_this.props = {
 			tasks: [],
+			navVisible: false,
 			filteredTasks: [],
 			filters: false,
 			projects: [],
@@ -23,7 +24,7 @@ export default class TodoApp {
 		return (
 			<div class="todo-app">
 				<todo-header data-credentials={data.props.credentials}/>
-				<todo-nav data-projects={data.props.projects} data-contexts={data.props.contexts} data-tags={data.props.tags} data-filters={data.props.filters}/>
+				<todo-nav class={data.props.navVisible ? 'active' : ''} data-projects={data.props.projects} data-contexts={data.props.contexts} data-tags={data.props.tags} data-filters={data.props.filters}/>
 				<todo-list data-store={this.taskStore} data-projects={data.props.projects} data-contexts={data.props.contexts} data-tasks={data.props.filteredTasks} data-filters={data.props.filters}/>
 			</div>
 		);
@@ -33,10 +34,13 @@ export default class TodoApp {
 	get events() {
 		return {
 			'todo-nav': {filter(event) {
+				this.getHost().setProps('navVisible', false);
 				this.getHost().taskStore.filter(event.detail);
 			}},
 			'todo-header': {login(event) {
 				this.getHost().userStore.setUser(event.detail);
+			}, logoaction() {
+				this.getHost().setProps('navVisible', true);
 			}}
 		};
 	}

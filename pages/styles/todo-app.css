@@ -37,7 +37,18 @@ todo-app {
 
 	@media screen and (max-width: 686px) {
 		todo-nav {
-			display: none;
+			position: absolute;
+			min-width: 256px;
+			max-width: calc(100% - 2em);
+			left: -100%;
+			opacity: 0;
+			z-index: 2;
+			transition: left 0.2s ease-out, opacity 0.2s ease-out;
+
+			&.active {
+				left: 0;
+				opacity: 1;
+			}
 		}
 		todo-header {
 			position: fixed;

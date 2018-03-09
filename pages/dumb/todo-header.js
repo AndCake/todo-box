@@ -52,6 +52,13 @@ export default class TodoHeader {
 	get styles() { return styles; }
 	get events() {
 		return {
+			'.logo': {click() {
+				let event = new Event('logoaction', {
+					bubbles: true,
+					cancelable: false
+				});
+				this.getHost().dispatchEvent(event);
+			}},
 			'button.js-trigger-form': {click() {
 				this.getHost().setProps('loginShown', !this.getHost().props.loginShown);
 			}},
