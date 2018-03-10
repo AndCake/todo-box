@@ -2,6 +2,7 @@ import fs from 'fs';
 import Koa from 'koa';
 import serve from 'koa-static';
 import session from 'koa-session';
+import compress from 'koa-compress';
 import koaBody from 'koa-body';
 import router from '../lib/router';
 import GlassBil from 'glassbil';
@@ -81,6 +82,7 @@ let app = new Koa();
 app.keys = ['H5HVMQBULZXUIKCJFRLGI3SCKFAUA6LBFFDHAYR4NZCD6M3MKRAQ'];
 app.use(session(app));
 app.use(koaBody());
+app.use(compress());
 
 // serve static files from those directories
 app.use(serve('node_modules/zino'));

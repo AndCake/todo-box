@@ -5,7 +5,7 @@ export default class TodoHeader {
 		return (
 			<header>
 				<h3 class="logo">Todo Box</h3>
-				<button class="login-trigger js-trigger-form">{data.props.credentials.username || 'Login'}{data.props.credentials.name ? '@' + data.props.credentials.name : ''}</button>
+				<button class="login-trigger js-trigger-form">{data.props.credentials.name ? data.props.credentials.name : 'Login'}</button>
 				{data.props.loginShown ? (
 					<form class="login-form">
 						<fieldset>

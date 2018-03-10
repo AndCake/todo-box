@@ -36,6 +36,8 @@ export default class TodoApp {
 			'todo-nav': {filter(event) {
 				this.getHost().setProps('navVisible', false);
 				this.getHost().taskStore.filter(event.detail);
+			}, close() {
+				this.getHost().setProps('navVisible', false);
 			}},
 			'todo-header': {login(event) {
 				this.getHost().userStore.setUser(event.detail);

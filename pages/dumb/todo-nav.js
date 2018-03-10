@@ -4,6 +4,7 @@ export default class TodoNav {
 	render(data) {
 		return (
 			<nav>
+				<button class="close-nav" type="button">Close</button>
 				<h3>Contexts</h3>
 				<ul class="contexts">
 					{data.props.contexts.map((context => (
@@ -23,6 +24,13 @@ export default class TodoNav {
 	get styles() { return styles; }
 	get events() {
 		return {
+			button: {click() {
+				let event = new Event('close', {
+					bubbles: true,
+					cancelable: false
+				});
+				this.getHost().dispatchEvent(event);
+			}},
 			li: {click() {
 				let event = new CustomEvent('filter', {
 					bubbles: true,

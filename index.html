@@ -1,8 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<title>{{title}}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<meta name="description" content="A WebDAV-based Todo.txt management web application."/>
+		<meta name="mobile-web-app-capable" content="yes"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta name="application-name" content="Todo Box"/>
+		<meta name="apple-mobile-web-app-title" content="Todo Box"/>
+		<meta name="theme-color" content="#91A437"/>
+		<link rel="manifest" href="/manifest.json"/>
 		<link rel="apple-touch-icon" href="/appicon.png"/>
 		<link rel="icon" sizes="192x192" href="/appicon.png"/>
 		<link rel="shortcut icon" href="/appicon.png" type="image/png"/>
@@ -19,7 +26,7 @@
 		<div id="page-content">
 			{{component}}
 		</div>
-		<script src="/zino-light.js"></script>
+		<script src="/zino-light.min.js"></script>
 		<script>
 			window.__INITIAL_STATE__ = {{storeState}};
 			{{devTools}}
