@@ -43,6 +43,13 @@ todo-nav {
 			background: $c-grey-90;
 			position: absolute;
 			top: 10px;
+			left: 0;
+		}
+	}
+
+	@media screen and (min-width: 687px) {
+		.close-nav {
+			display: none;
 		}
 	}
 
