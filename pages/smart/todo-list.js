@@ -50,7 +50,7 @@ export default class TodoList {
 									)).bind(this))}
 								</span>
 							</div>
-							<button class="js-delete">x</button>
+							<button class="js-delete">&times;</button>
 						</li>
 					)).bind(this))}
 				</ul>
@@ -172,6 +172,13 @@ export default class TodoList {
 				this.task && (this.task.value = '');
 			}}
 		};
+	}
+
+	onrender() {
+		let suggestions = this.querySelectorAll('#suggestions')[0];
+		if (suggestions) {
+			suggestions.selectedIndex = 0;
+		}
 	}
 
 	onmount(z) {

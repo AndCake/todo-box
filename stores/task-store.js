@@ -192,7 +192,7 @@ export default class TaskStore extends Store {
 			if (window.taskStoreInterval) {
 				clearInterval(window.taskStoreInterval);
 			}
-			window.taskStoreInterval = setInterval(this.loadTasks.bind(this), 300000);
+			window.taskStoreInterval = setInterval(this.loadTasks.bind(this), 60000);
 		}
 	}
 

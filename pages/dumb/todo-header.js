@@ -5,11 +5,11 @@ export default class TodoHeader {
 		return (
 			<header>
 				<h3 class="logo">Todo Box</h3>
-				<button class="login-trigger js-trigger-form">{data.props.credentials.name ? data.props.credentials.name : 'Login'}</button>
+				<button class="login-trigger js-trigger-form">{data.props.credentials.name ? data.props.credentials.name : 'Connect'}</button>
 				{data.props.loginShown ? (
 					<form class="login-form">
 						<fieldset>
-							<legend>Login</legend>
+							<legend>Connect to WebDAV Server</legend>
 							<p>Please login to your WebDAV provider. Your credentials will only be used to transfer your todos and will only be saved in your browser.</p>
 							<label>
 								Service Name:
@@ -32,7 +32,7 @@ export default class TodoHeader {
 								<input type="password" name="password" value=""/>
 							</label>
 							<div class="login-form__actions">
-								<button type="submit" class="js-login">Login</button><button type="button" class="button-cancel js-cancel">Cancel</button>
+								<button type="submit" class="js-login">Connect</button><button type="button" class="button-cancel js-cancel">Cancel</button>
 							</div>
 						</fieldset>
 					</form>
