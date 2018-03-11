@@ -66,6 +66,7 @@ todo-list {
 		margin-right: 20px;
 		margin-top: 3px;
 		transition: all 0.2s linear;
+		flex: 0 0 17px;
 
 		&.checked {
 			border-top-color: rgba(0, 0, 0, 0);

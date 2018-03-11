@@ -8,7 +8,11 @@
 	"description": "A WebDAV-based Todo.txt management app",
 	"icons": [{
 		"src": "/appicon.png",
-		"sizes": "60x60 192x192",
+		"sizes": "60x60",
+		"type": "image/png"
+	}, {
+		"src": "/appicon-192x192.png",
+		"sizes": "192x192",
 		"type": "image/png"
 	}],
 	"scope": "/"

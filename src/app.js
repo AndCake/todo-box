@@ -86,7 +86,7 @@ app.use(compress());
 
 // serve static files from those directories
 app.use(serve('node_modules/zino'));
-app.use(serve('public'));
+app.use(serve('public', {hidden: true}));
 app.use(serve('public/pages'));
 
 app.use(async ctx => {
