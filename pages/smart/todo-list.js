@@ -134,10 +134,11 @@ export default class TodoList {
 			'li .todo__checkbox': {click() {
 				let taskId = this.parentNode.dataset.id;
 				let taskStore = this.getHost().props.store;
+				let _this = this;
 				animate(this, 'toggle', 'checked').then(() => {
-					return animate(this.parentNode, 'add', 'leaving');
+					return animate(_this.parentNode, 'add', 'leaving');
 				}).then(() => {
-					this.parentNode.parentNode.removeChild(this.parentNode);
+					_this.parentNode.parentNode.removeChild(_this.parentNode);
 					taskStore.do(taskId);
 				});
 			}},

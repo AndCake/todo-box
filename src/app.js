@@ -92,7 +92,9 @@ app.use(serve('public/pages'));
 app.use(async ctx => {
 	let uri = ctx.path;
 	let route = router.route(uri);
-	fs.writeFileSync('./public/reload.js', '', 'utf-8');
+	if (!isProd) {
+		fs.writeFileSync('./public/reload.js', '', 'utf-8');
+	}
 	if (route) {
 		if (route.component) {
 			try {
@@ -119,4 +121,4 @@ app.use(async ctx => {
 
 app.listen(parseInt(port, 10));
 
-process.stdout.write('Simple server running at\n  => http://localhost:' + port + '/\nCTRL + C to shutdown');
+process.stdout.write(require('../package.json').name + ' server running at\n  => http://localhost:' + port + '/\nCTRL + C to shutdown');

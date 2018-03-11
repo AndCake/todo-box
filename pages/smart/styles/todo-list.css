@@ -21,7 +21,7 @@ todo-list {
 		margin: 0;
 		padding: 10px 16px;
 		display: flex;
-		transition: opacity 0.2s linear, max-height 0.2s linear, padding-top 0.2s linear, padding-bottom 0.2s linear;
+		transition: opacity 0.2s linear, max-height 0.5s linear, padding-top 0.5s linear, padding-bottom 0.5s linear;
 		max-height: 10em;
 
 		&.todo-editing {
