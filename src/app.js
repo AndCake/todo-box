@@ -8,7 +8,7 @@ import router from '../lib/router';
 import GlassBil from 'glassbil';
 import {zino, setCollector, renderComponent, setBasePath, setStaticBasePath} from 'zino/zino-ssr';
 
-let port = process.argv[2] || 8888;
+let port = process.argv[2] || process.env.PORT || 8888;
 let basePath = process.cwd();
 let isProd = process.env.NODE_ENV === 'production';
 

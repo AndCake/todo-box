@@ -1,7 +1,7 @@
 {
-  "name": "zino-base-project",
-  "version": "0.0.1",
-  "description": "An example of how to do a server-side rendered isomorphic zino app",
+  "name": "todobox",
+  "version": "0.0.6",
+  "description": "A simple Todo.txt-based WebDAV-synching Todo web app",
   "main": "index.js",
   "author": "Robert Kunze <quixotic.worx@protonmail.com>",
   "license": "MIT",
