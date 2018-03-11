@@ -222,6 +222,7 @@ export default class TaskStore extends Store {
 			body: JSON.stringify(this.credentials)
 		}).then(data => data.json()).then(data => {
 			taskList = data.tasks || '';
+			localStorage.setItem('todos', taskList);
 			let tasks = parseTaskList(taskList);
 			let newState = calculateDataObject(tasks, this.data.filters);
 			this.next(newState);
@@ -238,6 +239,9 @@ export default class TaskStore extends Store {
 		let body = JSON.stringify(obj);
 		localStorage.setItem('todos', fileContent);
 
+		if (window.taskStoreInterval) {
+			clearInterval(window.taskStoreInterval);
+		}
 		clearTimeout(this.debouncer);
 		this.debouncer = setTimeout((() => {
 			fetch(router.getUrl('tasks-save'), {
@@ -252,6 +256,8 @@ export default class TaskStore extends Store {
 				let tasks = parseTaskList(taskList);
 				let newState = calculateDataObject(tasks, this.data.filters);
 				this.next(newState);
+				clearInterval(window.taskStoreInterval);
+				window.taskStoreInterval = setInterval(this.loadTasks.bind(this), 60000);
 			}).bind(this)).catch(error => console.error('Unexpected response from server: ', error));
 		}).bind(this), 2000);
 	}
