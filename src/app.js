@@ -113,6 +113,7 @@ app.use(async ctx => {
 				let json = await restAPI[route.rest.split(':')[1] || ctx.method.toLowerCase()](route.data, ctx);
 				next(json);
 			} catch (error) {
+				console.error(error);
 				sendError(ctx, error);
 			}
 		}

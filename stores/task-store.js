@@ -30,17 +30,18 @@ function calculateDataObject(tasks, filters) {
 	result.filteredTasks = result.filteredTasks.sort((taskA, taskB) => {
 		let dueTagA = taskA.tags && taskA.tags.find(tag => tag.split(':')[0] === 'due');
 		let dueTagB = taskB.tags && taskB.tags.find(tag => tag.split(':')[0] === 'due');
+		let thisEvening = new Date(new Date().toISOString().replace(/T\d{2}:\d{2}/g, 'T23:59')).getTime();
 		if (dueTagA) {
 			dueTagA = dueTagA.split(':').slice(1).join(':');
 			dueTagA = new Date(dueTagA).getTime();
 		} else {
-			dueTagA = 93134745600000;
+			dueTagA = thisEvening;
 		}
 		if (dueTagB) {
 			dueTagB = dueTagB.split(':').slice(1).join(':');
 			dueTagB = new Date(dueTagB).getTime();
 		} else {
-			dueTagB = 93134745600000;
+			dueTagB = thisEvening;
 		}
 		return dueTagA - dueTagB;
 	});
@@ -54,7 +55,7 @@ function calculateDataObject(tasks, filters) {
 function stringifyTask(task, doneOnly) {
 	if (!doneOnly && task.done || doneOnly && !task.done) return '';
 	return [
-		task.done ? 'x ' + new Date().toISOString().split('T')[0] : '',
+		task.done ? 'x ' + task.done.toISOString().split('T')[0] : '',
 		task.priority || '',
 		task.text.trim(),
 		task.links && task.links.map(link => link.url).join(' '),
@@ -65,7 +66,7 @@ function stringifyTask(task, doneOnly) {
 }
 
 function stringify(tasks, doneOnly) {
-	return tasks.map(task => stringifyTask(task, doneOnly)).join('\n');
+	return tasks.map(task => stringifyTask(task, doneOnly)).join('\n').replace(/\n+/g, '\n');
 }
 
 function parseTask(task, id) {
@@ -100,6 +101,14 @@ function parseTask(task, id) {
 	return taskObject;
 }
 
+function parseDoneTask(task, id) {
+	let doneRegEx = /^x\s+(\d+-\d+-\d+)\s+/;
+	let doneDate = task.match(doneRegEx);
+	let taskObject = parseTask(task.replace(doneDate && doneDate[0] || '__CANNOT_BE_FOUND_DEADBEEF__', ''), id);
+	taskObject.done = doneDate && new Date(doneDate[1]) || false;
+	return taskObject;
+}
+
 function parseTaskList(taskList) {
 	let tasks = [];
 	if (!taskList) return tasks;
@@ -109,6 +118,17 @@ function parseTaskList(taskList) {
 		}
 	});
 
+	return tasks;
+}
+
+function parseDoneTaskList(taskList) {
+	let tasks = [];
+	if (!taskList) return tasks;
+	taskList.split('\n').forEach((task, id) => {
+		if (task) {
+			tasks.push(parseDoneTask(task, id.toString()));
+		}
+	});
 	return tasks;
 }
 
@@ -151,7 +171,7 @@ export default class TaskStore extends Store {
 				}
 				let task = currentState.tasks.find(task => task.id === taskId);
 				if (task) {
-					task.done = !task.done;
+					task.done = task.done ? false : new Date();
 				}
 				currentState = calculateDataObject(currentState.tasks, currentState.filters);
 				next(currentState);
@@ -203,6 +223,14 @@ export default class TaskStore extends Store {
 		}
 	}
 
+	getCredentials(type) {
+		var target = Object.assign({}, this.credentials);
+		if (type === 'done') {
+			target.url = target.url.replace(/\/todo\.txt$/, '/done.txt');
+		}
+		return target;
+	}
+
 	loadTasks() {
 		let taskList = '';
 		if (!this.credentials) {
@@ -219,11 +247,18 @@ export default class TaskStore extends Store {
 			headers: {
 				'Content-Type': 'application/json; charset=utf-8'
 			},
-			body: JSON.stringify(this.credentials)
-		}).then(data => data.json()).then(data => {
-			taskList = data.tasks || '';
-			localStorage.setItem('todos', taskList);
-			let tasks = parseTaskList(taskList);
+			body: JSON.stringify(this.getCredentials())
+		}).then(data => data.json()).then(openData => {
+			return fetch(router.getUrl('tasks-load'), {
+				method: 'post',
+				headers: {
+					'Content-Type': 'application/json; charset=utf-8'
+				},
+				body: JSON.stringify(this.getCredentials('done'))
+			}).then(doneResponse => doneResponse.json()).then(doneData => openData.tasks + '\n' + doneData.tasks);
+		}).then(data => {
+			taskList = data || '';
+			let tasks = parseDoneTaskList(taskList);
 			let newState = calculateDataObject(tasks, this.data.filters);
 			this.next(newState);
 		});
@@ -235,7 +270,7 @@ export default class TaskStore extends Store {
 			return;
 		}
 		let fileContent = stringify(state.tasks);
-		let obj = {credentials: this.credentials, data: fileContent};
+		let obj = {credentials: this.getCredentials(), data: fileContent};
 		let body = JSON.stringify(obj);
 		localStorage.setItem('todos', fileContent);
 
@@ -244,21 +279,29 @@ export default class TaskStore extends Store {
 		}
 		clearTimeout(this.debouncer);
 		this.debouncer = setTimeout((() => {
+			// save open tasks
 			fetch(router.getUrl('tasks-save'), {
 				method: 'post',
 				headers: {
 					'Content-Type': 'application/json; charset=utf-8'
 				},
 				body: body
-			}).then(response => response.json()).then((data => {
-				if (!data.tasks) return;
-				let taskList = data.tasks || '';
-				let tasks = parseTaskList(taskList);
-				let newState = calculateDataObject(tasks, this.data.filters);
-				this.next(newState);
+			}).then(response => response.json()).then((() => {
 				clearInterval(window.taskStoreInterval);
 				window.taskStoreInterval = setInterval(this.loadTasks.bind(this), 60000);
 			}).bind(this)).catch(error => console.error('Unexpected response from server: ', error));
+
+			// save done tasks
+			obj.credentials = this.getCredentials('done');
+			obj.data = stringify(state.tasks, true);
+			body = JSON.stringify(obj);
+			fetch(router.getUrl('tasks-save'), {
+				method: 'post',
+				headers: {
+					'Content-Type': 'application/json; charset=utf-8'
+				},
+				body: body
+			});
 		}).bind(this), 2000);
 	}
 
