@@ -8,10 +8,11 @@ export default class TodoApp {
 		let _this = this || {};
 		// define initial props
 		_this.props = {
-			tasks: [],
 			navVisible: false,
-			filteredTasks: [],
+			activeNetwork: false,
 			filters: false,
+			tasks: [],
+			filteredTasks: [],
 			projects: [],
 			dueTasks: [],
 			contexts: [],
@@ -23,7 +24,7 @@ export default class TodoApp {
 	render(data) {
 		return (
 			<div class="todo-app">
-				<todo-header data-credentials={data.props.credentials}/>
+				<todo-header data-credentials={data.props.credentials} data-network={data.props.activeNetwork ? 'active' : 'inactive'}/>
 				<todo-nav class={data.props.navVisible ? 'active' : ''} data-projects={data.props.projects} data-contexts={data.props.contexts} data-tags={data.props.tags} data-filters={data.props.filters}/>
 				<todo-list data-store={this.taskStore} data-projects={data.props.projects} data-contexts={data.props.contexts} data-tasks={data.props.filteredTasks} data-filters={data.props.filters}/>
 			</div>
@@ -56,6 +57,12 @@ export default class TodoApp {
 		this.userStore = new UserStore();
 		this.notifier = new TaskNotifier();
 
+		this.taskStore.on('network-start', this.networkStart = () => {
+			this.getHost().setProps('activeNetwork', true);
+		});
+		this.taskStore.on('network-end', this.networkEnd = () => {
+			this.getHost().setProps('activeNetwork', false);
+		});
 		this.taskStore.on('changed', this.tasksChanged = data => {
 			this.notifier.setTasks(data.tasks.filter(task => task.tags && task.tags.find(tag => tag.split(':')[0] === 'due')));
 			setTimeout((() => {
@@ -73,5 +80,7 @@ export default class TodoApp {
 	onunmount() {
 		this.taskStore.off('changed', this.tasksChanged);
 		this.userStore.off('changed', this.usersChanged);
+		this.taskStore.off('network-start', this.networkStart);
+		this.taskStore.off('network-end', this.networkEnd);
 	}
 }

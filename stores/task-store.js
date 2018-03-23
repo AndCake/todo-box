@@ -242,6 +242,7 @@ export default class TaskStore extends Store {
 			let newState = calculateDataObject(tasks, this.data.filters);
 			this.next(newState);
 		}
+		this.trigger('network-start');
 		fetch(router.getUrl('tasks-load'), {
 			method: 'post',
 			headers: {
@@ -261,6 +262,7 @@ export default class TaskStore extends Store {
 			let tasks = parseDoneTaskList(taskList);
 			let newState = calculateDataObject(tasks, this.data.filters);
 			this.next(newState);
+			this.trigger('network-end');
 		});
 	}
 
@@ -280,7 +282,8 @@ export default class TaskStore extends Store {
 		clearTimeout(this.debouncer);
 		this.debouncer = setTimeout((() => {
 			// save open tasks
-			fetch(router.getUrl('tasks-save'), {
+			this.trigger('network-start');
+			let openPromise = fetch(router.getUrl('tasks-save'), {
 				method: 'post',
 				headers: {
 					'Content-Type': 'application/json; charset=utf-8'
@@ -295,13 +298,14 @@ export default class TaskStore extends Store {
 			obj.credentials = this.getCredentials('done');
 			obj.data = stringify(state.tasks, true);
 			body = JSON.stringify(obj);
-			fetch(router.getUrl('tasks-save'), {
+			let donePromise = fetch(router.getUrl('tasks-save'), {
 				method: 'post',
 				headers: {
 					'Content-Type': 'application/json; charset=utf-8'
 				},
 				body: body
 			});
+			Promise.all([openPromise, donePromise]).then(() => this.trigger('network-end'));
 		}).bind(this), 2000);
 	}
 

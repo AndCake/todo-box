@@ -3,7 +3,7 @@ import styles from './styles/todo-header.css';
 export default class TodoHeader {
 	render(data) {
 		return (
-			<header>
+			<header class={'is-' + data.props.network}>
 				<h3 class="logo">Todo Box</h3>
 				<button class="login-trigger js-trigger-form">{data.props.credentials.name ? data.props.credentials.name : 'Connect'}</button>
 				{data.props.loginShown ? (

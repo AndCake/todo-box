@@ -1,5 +1,11 @@
 @import "../../styles/lib/colors.css";
 
+@keyframes loading {
+    0%{right: 100%;}
+    50%{right: 50%;}
+    100%{right: 0%;}
+}
+
 todo-header {
     display: block;
     background: $c-header-background;
@@ -13,7 +19,26 @@ todo-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-    }
+
+        &::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border: 1px solid transparent;
+            box-shadow: 0 0 3px $c-grey-90;
+            background: linear-gradient(to right, $c-tertiary-1 0%, $c-secondary-1 50%, $c-tertiary-1 100%);
+            display: none;
+            transition: border-color 0.5s linear;
+            bottom: 0;
+        }
+        &.is-active::after {
+            border-color: $c-secondary-0;
+            animation: loading 2.55s infinite alternate;
+            display: block;
+        }
+}
 
     .logo {
         text-shadow: 1px 1px 1px $c-primary-4;
@@ -87,6 +112,7 @@ todo-header {
         font-size: 90%;
         top: 3em;
         right: 0;
+        z-index: 1;
     }
 
     legend {
