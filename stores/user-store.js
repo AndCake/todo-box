@@ -4,11 +4,11 @@ export default class UserStore extends Store {
 	constructor() {
 		super('user', {
 			setUser(currentState, data) {
-				currentState = Object.assign({}, currentState, data);
+				let newState = Object.assign({}, currentState.toJS(), data);
 				if (typeof localStorage !== 'undefined') {
-					localStorage.setItem('credentials', JSON.stringify(currentState));
+					localStorage.setItem('credentials', JSON.stringify(newState));
 				}
-				return currentState;
+				return newState;
 			}
 		});
 
@@ -16,13 +16,14 @@ export default class UserStore extends Store {
 	}
 
 	loadData() {
+		let _this = this;
 		if (typeof localStorage !== 'undefined') {
 			setTimeout(() => {
 				let credentials = localStorage.getItem('credentials') || '{}';
-				this.next(JSON.parse(credentials));
+				_this.setState(JSON.parse(credentials));
 			}, 100);
 		} else {
-			this.next({});
+			_this.setState({});
 		}
 	}
 }

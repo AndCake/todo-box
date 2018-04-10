@@ -134,61 +134,70 @@ function parseDoneTaskList(taskList) {
 
 export default class TaskStore extends Store {
 	constructor(credentials) {
-		let _this;
-		super('task', {
+		super('task');
+
+		let _this = this;
+		this.actions({
 			add(currentState, task, next) {
-				if (!currentState.tasks) {
-					currentState.tasks = [];
+				let newState = currentState.toJS();
+				if (!newState.tasks) {
+					newState.tasks = [];
 				}
 				task = parseTask(task);
-				task.id = currentState.tasks.length.toString();
-				currentState.tasks.push(task);
-				currentState = calculateDataObject(currentState.tasks, currentState.filters);
-				next(currentState);
-				_this.saveTasks(currentState);
+				task.id = newState.tasks.length.toString();
+				task.modified = +new Date;
+				newState.tasks.push(task);
+				newState = calculateDataObject(newState.tasks, newState.filters);
+				next(newState);
+				_this.saveTasks(newState);
 			},
 
 			filter(currentState, filter, next) {
-				if (!currentState.tasks) {
-					currentState.tasks = [];
+				let newState = currentState.toJS();
+				if (!newState.tasks) {
+					newState.tasks = [];
 				}
-				if (!currentState.filters) {
-					currentState.filters = [];
+				if (!newState.filters) {
+					newState.filters = [];
 				}
-				let position = currentState.filters.indexOf(filter);
+				let position = newState.filters.indexOf(filter);
 				if (position >= 0) {
-					currentState.filters.splice(position, 1);
+					newState.filters.splice(position, 1);
 				} else {
-					currentState.filters.push(filter);
+					newState.filters.push(filter);
 				}
-				currentState = calculateDataObject(currentState.tasks, currentState.filters);
-				next(currentState);
+				newState = calculateDataObject(newState.tasks, newState.filters);
+				next(newState);
 			},
 
 			do(currentState, taskId, next) {
-				if (!currentState.tasks) {
-					currentState.tasks = [];
+				let newState = currentState.toJS();
+				if (!newState.tasks) {
+					newState.tasks = [];
 				}
-				let task = currentState.tasks.find(task => task.id === taskId);
+				let task = newState.tasks.find(task => task.id === taskId);
 				if (task) {
 					task.done = task.done ? false : new Date();
+					task.modified = +new Date;
 				}
-				currentState = calculateDataObject(currentState.tasks, currentState.filters);
-				next(currentState);
-				_this.saveTasks(currentState);
+				newState = calculateDataObject(newState.tasks, newState.filters);
+				next(newState);
+				_this.saveTasks(newState);
 			},
 
 			update(currentState, taskData, next) {
-				if (!currentState.tasks) {
-					currentState.tasks = [];
+				let newState = currentState.toJS();
+				if (!newState.tasks) {
+					newState.tasks = [];
 				}
-				let task = currentState.tasks.find(task => task.id === taskData.id);
+				let task = newState.tasks.find(task => task.id === taskData.id);
 				if (task) {
 					task = Object.assign({id: task.id}, parseTask(taskData.text));
+					task.modified = +new Date;
 				}
-				currentState = calculateDataObject(currentState.tasks, currentState.filters);
-				next(currentState);
-				_this.saveTasks(currentState);
+				newState = calculateDataObject(newState.tasks, newState.filters);
+				next(newState);
+				_this.saveTasks(newState);
 			},
 
 			delete(currentState, taskId, next) {
@@ -205,8 +214,6 @@ export default class TaskStore extends Store {
 			}
 		});
 		this.credentials = credentials;
-		_this = this;
-
 		this.loadTasks();
 		if (typeof window !== 'undefined') {
 			if (window.taskStoreInterval) {
@@ -236,11 +243,11 @@ export default class TaskStore extends Store {
 		if (!this.credentials) {
 			return;
 		}
-		if (typeof localStorage !== 'undefined') {
+		if (!this.data.tasks && typeof localStorage !== 'undefined') {
 			taskList = localStorage.getItem('todos');
 			let tasks = parseTaskList(taskList);
 			let newState = calculateDataObject(tasks, this.data.filters);
-			this.next(newState);
+			this.setState(newState);
 		}
 		this.trigger('network-start');
 		fetch(router.getUrl('tasks-load'), {
@@ -259,10 +266,22 @@ export default class TaskStore extends Store {
 			}).then(doneResponse => doneResponse.json()).then(doneData => openData.tasks + '\n' + doneData.tasks);
 		}).then(data => {
 			taskList = data || '';
+			let currentTasks = this.data.tasks;
 			let tasks = parseDoneTaskList(taskList);
+			let isMerged = false;
+			tasks.forEach((task, idx) => {
+				let matchingTask = currentTasks.find(currentTask => currentTask.id === task.id);
+				if (task.modified < matchingTask.modified) {
+					tasks[idx] = matchingTask;
+					isMerged = true;
+				}
+			});
 			let newState = calculateDataObject(tasks, this.data.filters);
-			this.next(newState);
+			this.setState(newState);
 			this.trigger('network-end');
+			if (isMerged) {
+				this.saveTasks(this.data);
+			}
 		});
 	}
 

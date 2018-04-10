@@ -1,6 +1,6 @@
 (function (module) {
 	return module.exports = function() {
-		var ENV = "production";
+		var ENV = "development";
 var __resultComponent = (function () {
 'use strict';
 

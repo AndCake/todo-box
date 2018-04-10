@@ -75,6 +75,9 @@ export default class TodoApp {
 				this.getHost().setProps('credentials', data);
 			}
 		});
+		if (this.userStore.data) {
+			this.usersChanged(this.userStore.data);
+		}
 	}
 
 	onunmount() {
