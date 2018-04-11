@@ -1676,9 +1676,9 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-glassbil@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/glassbil/-/glassbil-0.0.6.tgz#0e2c99d5ffdfe0297c538d415c95870fc9f1a6cb"
+glassbil@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/glassbil/-/glassbil-1.1.0.tgz#d7babace2b94eb43e5e268179cf712311bf98276"
   dependencies:
     chai "^4.1.2"
     istanbul "^0.4.5"
