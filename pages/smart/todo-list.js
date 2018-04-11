@@ -16,6 +16,9 @@ export default class TodoList {
 	}
 
 	render(data) {
+		if (data.props.filters && data.props.filters.toJS) {
+			data.props.filters = data.props.filters.toJS();
+		}
 		return (
 			<div class="todo-list">
 				<div class="todo-list__filter">

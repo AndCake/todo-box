@@ -191,6 +191,7 @@ todo-list {
 			padding: 5px 10px;
 			box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 			appearance: none;
+			font-size: 14pt;
 		}
 
 		button[type="submit"] {

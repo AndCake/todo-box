@@ -25,6 +25,8 @@ function renderPage(route, request, response) {
 	let pageSource = fs.readFileSync('./index.html', 'utf-8');
 
 	const store = new GlassBil();
+	// by default has all data & events from previous requests, so we need to reset it
+	store.reset();
 
 	// clear our require cache so that changes to our components will be reflected
 	// on the page without server restart
@@ -33,10 +35,11 @@ function renderPage(route, request, response) {
 	// this will hold our collected data from all the stores
 	let loadedData = {};
 
+
 	// set our asynchronous render handling
 	setCollector(function(next) {
 		// wait for our data to be finished loading
-		store.on('global:data-loaded', (data) => {
+		store.on('global:data-loaded', data => {
 			loadedData = data;
 			next();
 		});

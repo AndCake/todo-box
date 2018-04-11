@@ -2,6 +2,7 @@ import styles from './styles/todo-app.css';
 import TaskStore from '../stores/task-store';
 import UserStore from '../stores/user-store';
 import TaskNotifier from '../lib/task-notifier';
+import devtools from 'glassbil/devtools';
 
 export default class TodoApp {
 	constructor() {
@@ -13,6 +14,8 @@ export default class TodoApp {
 			filters: false,
 			tasks: [],
 			filteredTasks: [],
+			filteredContexts: [],
+			filteredProjects: [],
 			projects: [],
 			dueTasks: [],
 			contexts: [],
@@ -25,7 +28,7 @@ export default class TodoApp {
 		return (
 			<div class="todo-app">
 				<todo-header data-credentials={data.props.credentials} data-network={data.props.activeNetwork ? 'active' : 'inactive'}/>
-				<todo-nav class={data.props.navVisible ? 'active' : ''} data-projects={data.props.projects} data-contexts={data.props.contexts} data-tags={data.props.tags} data-filters={data.props.filters}/>
+				<todo-nav class={data.props.navVisible ? 'active' : ''} data-projects={data.props.filteredProjects} data-contexts={data.props.filteredContexts} data-tags={data.props.tags} data-filters={data.props.filters}/>
 				<todo-list data-store={this.taskStore} data-projects={data.props.projects} data-contexts={data.props.contexts} data-tasks={data.props.filteredTasks} data-filters={data.props.filters}/>
 			</div>
 		);
@@ -53,21 +56,23 @@ export default class TodoApp {
 		z.import('./dumb/todo-nav.js');
 		z.import('./smart/todo-list.js');
 
-		this.taskStore = new TaskStore();
-		this.userStore = new UserStore();
+		let _this = this;
+
+		this.taskStore = z.isBrowser ? devtools(new TaskStore()) : new TaskStore();
+		this.userStore = z.isBrowser ? devtools(new UserStore()) : new UserStore();
 		this.notifier = new TaskNotifier();
 
 		this.taskStore.on('network-start', this.networkStart = () => {
-			this.getHost().setProps('activeNetwork', true);
+			_this.getHost().setProps('activeNetwork', true);
 		});
 		this.taskStore.on('network-end', this.networkEnd = () => {
-			this.getHost().setProps('activeNetwork', false);
+			_this.getHost().setProps('activeNetwork', false);
 		});
 		this.taskStore.on('changed', this.tasksChanged = data => {
-			this.notifier.setTasks(data.tasks.filter(task => task.tags && task.tags.find(tag => tag.split(':')[0] === 'due')));
+			this.notifier.setTasks(data.tasks.toJS().filter(task => task.tags && task.tags.find(tag => tag.split(':')[0] === 'due')));
 			setTimeout((() => {
-				this.getHost().setProps(data);
-			}).bind(this), 150);
+				this.getHost().setProps(data.toJS());
+			}).bind(_this), 150);
 		});
 		this.userStore.on('changed', this.usersChanged = data => {
 			if (data && Object.keys(data).length > 0) {

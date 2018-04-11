@@ -17,15 +17,21 @@ function calculateDataObject(tasks, filters) {
 	};
 	let projects = {};
 	let contexts = {};
+	let filteredProjects = [];
+	let filteredContexts = [];
 	let tags = {};
 
 	tasks.forEach((task, id) => {
 		task.id = id.toString();
 		task.tags && task.tags.forEach(tag => tags[tag] += 1);
 	});
-	result.filteredTasks.forEach(task => {
+	result.tasks.forEach(task => {
 		task.projects && task.projects.forEach(project => projects[project] += 1);
 		task.contexts && task.contexts.forEach(context => contexts[context] += 1);
+	});
+	result.filteredTasks.forEach(task => {
+		task.projects.forEach(project => filteredProjects[project] += 1);
+		task.contexts.forEach(context => filteredContexts[context] += 1);
 	});
 	result.filteredTasks = result.filteredTasks.sort((taskA, taskB) => {
 		let dueTagA = taskA.tags && taskA.tags.find(tag => tag.split(':')[0] === 'due');
@@ -48,6 +54,8 @@ function calculateDataObject(tasks, filters) {
 
 	result.projects = Object.keys(projects);
 	result.contexts = Object.keys(contexts);
+	result.filteredProjects = Object.keys(filteredProjects);
+	result.filteredContexts = Object.keys(filteredContexts);
 
 	return result;
 }
@@ -159,6 +167,8 @@ export default class TaskStore extends Store {
 				}
 				if (!newState.filters) {
 					newState.filters = [];
+				} else if (newState.filters.toJS) {
+					newState.filters = newState.filters.toJS();
 				}
 				let position = newState.filters.indexOf(filter);
 				if (position >= 0) {
@@ -201,16 +211,19 @@ export default class TaskStore extends Store {
 			},
 
 			delete(currentState, taskId, next) {
-				if (!currentState.tasks) {
-					currentState.tasks = [];
+				let newState = currentState.toJS();
+				if (!newState.tasks) {
+					newState.tasks = [];
+				} else if (newState.tasks.toJS) {
+					newState.tasks = newState.tasks.toJS();
 				}
-				let task = currentState.tasks.find(task => task.id === taskId);
+				let task = newState.tasks.find(task => task.id === taskId);
 				if (task) {
-					currentState.tasks.splice(currentState.tasks.indexOf(task), 1);
+					newState.tasks.splice(newState.tasks.indexOf(task), 1);
 				}
-				currentState = calculateDataObject(currentState.tasks, currentState.filters);
-				next(currentState);
-				_this.saveTasks(currentState);
+				newState = calculateDataObject(newState.tasks, newState.filters);
+				next(newState);
+				_this.saveTasks(newState);
 			}
 		});
 		this.credentials = credentials;
@@ -223,9 +236,16 @@ export default class TaskStore extends Store {
 		}
 	}
 
+	get tasks() {
+		if (this.data && this.data.tasks && this.data.tasks.length > 0) {
+			return this.data.tasks;
+		}
+		return null;
+	}
+
 	setCredentials(credentials) {
 		this.credentials = credentials;
-		if (!this.data.tasks || this.data.tasks.length <= 0) {
+		if (!this.tasks) {
 			this.loadTasks();
 		}
 	}
@@ -240,14 +260,15 @@ export default class TaskStore extends Store {
 
 	loadTasks() {
 		let taskList = '';
+		let _this = this;
 		if (!this.credentials) {
 			return;
 		}
-		if (!this.data.tasks && typeof localStorage !== 'undefined') {
+		if (!this.tasks && typeof localStorage !== 'undefined') {
 			taskList = localStorage.getItem('todos');
 			let tasks = parseTaskList(taskList);
-			let newState = calculateDataObject(tasks, this.data.filters);
-			this.setState(newState);
+			let newState = calculateDataObject(tasks, this.data && this.data.filters);
+			this.setState(newState, '@@INIT');
 		}
 		this.trigger('network-start');
 		fetch(router.getUrl('tasks-load'), {
@@ -266,21 +287,21 @@ export default class TaskStore extends Store {
 			}).then(doneResponse => doneResponse.json()).then(doneData => openData.tasks + '\n' + doneData.tasks);
 		}).then(data => {
 			taskList = data || '';
-			let currentTasks = this.data.tasks;
+			let currentTasks = this.tasks || [];
 			let tasks = parseDoneTaskList(taskList);
 			let isMerged = false;
 			tasks.forEach((task, idx) => {
 				let matchingTask = currentTasks.find(currentTask => currentTask.id === task.id);
-				if (task.modified < matchingTask.modified) {
+				if (matchingTask && task.modified < matchingTask.modified) {
 					tasks[idx] = matchingTask;
 					isMerged = true;
 				}
 			});
-			let newState = calculateDataObject(tasks, this.data.filters);
-			this.setState(newState);
-			this.trigger('network-end');
+			let newState = calculateDataObject(tasks, _this.data && _this.data.filters);
+			_this.setState(newState, '@@LOAD');
+			_this.trigger('network-end');
 			if (isMerged) {
-				this.saveTasks(this.data);
+				_this.saveTasks(newState);
 			}
 		});
 	}
